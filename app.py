@@ -28,6 +28,10 @@ def index(page_id: int):
         return redirect(url_for('index', page_id=last_page))
     return render_template('index.html', get_image_list=get_image_list, last_page=last_page, page_id=page_id)
 
+@app.route('/add_image', methods=['GET', 'POST'])
+def add_image():
+    return render_template('add_image.html')
+
 @app.route('/page/', methods=['GET', 'POST'])
 def page_no_par():
     return redirect(url_for('index', page_id=1))

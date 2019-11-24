@@ -3,29 +3,13 @@
 {% block content %}
 <h2>Картиночки</h2>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Link</th>
-      <th scope="col">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for img in get_image_list(page_id=page_id)%}
-    <tr >
-      <th scope="row">{{img.id}}</th>
-      <td>{{img.name}}</td>
-      <td><a href="{{img.link}}">{{img.link}}</a></td>
-      <td>{{img.date}}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<form action={{url_for('add_image')}}>
+  <button type="submit" class="btn btn-lg btn-primary">+ Add Image</button>
+</form>
 
-<nav aria-label="...">
-  <ul class="pagination">
+
+<nav aria-label="Navigation">
+  <ul class="pagination justify-content-center">
       {% if page_id <= 1 %}
       <li class="page-item disabled"><a class="page-link" aria-disabled="true">Previous</a></li>
       {% else %}
@@ -49,4 +33,24 @@
 </nav>
 
 
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Link</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for img in get_image_list(page_id=page_id)%}
+    <tr >
+      <th scope="row">{{img.id}}</th>
+      <td>{{img.name}}</td>
+      <td><a href="{{img.link}}">{{img.link}}</a></td>
+      <td>{{img.date}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
