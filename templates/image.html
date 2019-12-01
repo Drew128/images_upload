@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="w-50 p-3">
+    <h2 class="test">Картиночка</h2>
+    <br>
+</div>
+
+<form action="{{url_for('image_change')}}" method="post">
+    {% for name, value in [["#", img.id], ["Name", img.name], ["Link", img.link], ["Date", img.date]] %}
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroup-sizing-default">{{name}}</span>
+  </div>
+    {% if name in ("#", "Link", "Date") %}
+    <input class="form-control" name={{name}} readonly value={{value}}>
+        {% if name in ("Date") %}
+        <script>
+        function updateDate(t) {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd ;
+            document.querySelector('input[name="Date"]').value = today;
+        }
+        </script>
+            <button class="btn btn-outline-secondary" type="button" id="button_update" onclick="updateDate(this)">Update</button>
+        {% endif %}
+    {% else %}
+    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name={{name}} value={{value}}>
+    {% endif %}
+</div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
