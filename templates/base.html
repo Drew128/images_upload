@@ -14,6 +14,13 @@
 
 <body>
 <div class="container">
+    <button type="button" class="btn btn-light hBack">❮ Previous</button>
+    <script>
+        $(".hBack").on("click", function(e){
+    e.preventDefault();
+    window.history.back();
+        });
+    </script>
     {% block content %}
     {% endblock %}
 </div>

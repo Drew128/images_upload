@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="w-50 p-3">
-    <h2>Добавить картиночку</h2>
+    <h2 class="test">Добавить&nbspкартиночку</h2>
     <br>
-    <form class_="btn btn-primary" action="{{url_for('add_image')}}" method="post" enctype="multipart/form-data">
+    <form action="{{url_for('add_image')}}" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
-            <input id="filename" name="filename" type="text" class="form-control" placeholder="image.jpg" aria-label="Username" aria-describedby="basic-addon1">
+            <input id="filename" name="filename" type="text" class="form-control" placeholder="example.jpg">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="submit">Upload</button>
+                <button id="upload" class="btn btn-primary" type="submit">Upload</button>
             </div>
         <div class="custom-file">
             <input name="file" type="file" class="custom-file-input" id="inputFile">
@@ -19,13 +19,53 @@
         </div>
     </form>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function e(){
+          $('button[id="upload"]')[0].disabled = true
+          $('input[id="filename"]')[0].disabled = true
+          });
+
+          $('input[type="file"]').change(function e()
+         {
+          var filename = $('input[id="filename"]')[0]
+          var isFile = $('input[type="file"]').length
+          if (/^[0-9a-zA-Z\^\&\'\@\{\}\[\]\,\$\=\!\-\#\(\)\.\%\+\~\_]+$/.test(filename.value))
+          {
+          filename.classList.remove("is-valid")
+          filename.classList.add("is-invalid")
+          }
+          else
+          {
+          filename.classList.remove("is-invalid")
+          filename.classList.add("is-valid")
+          }
+          if (isFile == 1) {
+            $('button[id="upload"]')[0].disabled = false
+            $('input[id="filename"]')[0].disabled = false
+          }
+          else {
+            $('button[id="upload"]')[0].disabled = true
+          }}
+          );
+
+        $('input[id="filename"]').keyup(function e()
+         {
+          var filename = $('input[id="filename"]')[0]
+          if (/^[0-9a-zA-Z\^\&\'\@\{\}\[\]\,\$\=\!\-\#\(\)\.\%\+\~\_]+$/.test(filename.value))
+          {$('button[id="upload"]')[0].disabled = false
+          filename.classList.remove("is-invalid")
+          filename.classList.add("is-valid")
+          }
+          else
+          {$('button[id="upload"]')[0].disabled = true
+          filename.classList.remove("is-valid")
+          filename.classList.add("is-invalid")}
+          });
+
         $('input[type="file"]').change(function(e){
         var fileName = e.target.files[0].name;
         document.getElementById("filename").value = fileName
         document.getElementsByClassName("custom-file-label")[0].innerHTML = fileName;
             });
-        });
     </script>
 </div>
 

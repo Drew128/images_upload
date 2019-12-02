@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Link</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for index, href, image in obj %}
+    <tr class='clickable-row' onclick="window.location.href ='{{href}}'">
+      <th scope="row"></th>
+      <td>
+        <a id="open" class="btn btn-secondary" data-toggle="collapse" href={{href}}>open</a>
+      </td>
+      <td>{{index}}</td>
+      <td>text</td>
+      <td><a href="link">link</a></td>
+      <td>another</td>
+      <tr class="collapse" id={{image}}>
+        <td><p>anything {{id}}</p></td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock %}

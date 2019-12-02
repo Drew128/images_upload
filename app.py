@@ -7,6 +7,24 @@ import datetime
 import math
 from werkzeug.utils import secure_filename
 
+"""from flask_login import current_user, login_user
+from app.models import User
+
+# ...
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+    return render_template('login.html', title='Sign In', form=form)"""
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///example.sqlite"
@@ -43,6 +61,39 @@ def add_image():
         print("file", filename)
         print(type(file))
     return render_template('add_image.html')
+
+@app.route('/image/change', methods=['GET', 'POST'])
+def image_change():
+    if request.method == "POST":
+        form_id = request.form.getlist("#")[0]
+        form_name = request.form.getlist("Name")[0]
+        form_date = request.form.getlist("Date")[0]
+
+        img = db.session(Images).query.get(form_id)              # suboptimal solution
+
+        is_id = img.id == form_id
+        is_name = img.name == form_name
+        is_date = img.date == form_date
+        if is_id and is_name and is_date:
+            pass    # no change
+        else:
+            if not is_name:
+                image.name = form_name
+            if not is_date:
+                image.date = form_date
+            print(db.session.commit())
+        return redirect(url_for('image', image_id=form_id))
+
+
+@app.route('/image/<int:image_id>', methods=['GET', 'POST'])
+def image(image_id: int):
+    return render_template('image.html', image_id=image_id, img=Images.query.get(image_id))
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    obj = [[i, f"#image{i}", f"image{i}"] for i in range(10)]
+    return render_template('test.html', obj=obj)
+
 
 def get_image_list(per_page=app.config['ROWS_PER_PAGE'], page_id=1):
     page_id -= 1                            # to make indexes starts with 1 instead of 0
