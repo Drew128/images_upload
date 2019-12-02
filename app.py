@@ -43,6 +43,7 @@ class Images(db.Model):
 def index():
     return redirect(url_for('images_list', page_id=1))
 
+
 @app.route('/images_list/page/<int:page_id>', methods=['GET', 'POST'])
 def images_list(page_id: int):
     if page_id < 1:
@@ -52,6 +53,7 @@ def images_list(page_id: int):
         return redirect(url_for('index', page_id=last_page))
     return render_template('images_list.html', get_image_list=get_image_list, last_page=last_page, page_id=page_id)
 
+
 @app.route('/add_image', methods=['GET', 'POST'])
 def add_image():
     if request.method == "POST":
@@ -60,7 +62,14 @@ def add_image():
         filename = secure_filename(file.filename)
         print("file", filename)
         print(type(file))
+        new_image = Images(name=str(request.form.getlist('filename')[0]), link=f"http://link.net/image_n.img",
+                           date=datetime.date.today())
+        print(new_image.id,new_image.name, new_image.link, new_image.date)
+        db.session.add(new_image)
+        db.session.commit()
+        return redirect(url_for('image', image_id=new_image.id))
     return render_template('add_image.html')
+
 
 @app.route('/image/change', methods=['GET', 'POST'])
 def image_change():
@@ -69,18 +78,18 @@ def image_change():
         form_name = request.form.getlist("Name")[0]
         form_date = request.form.getlist("Date")[0]
 
-        img = db.session(Images).query.get(form_id)              # suboptimal solution
-
+        img = db.session.query(Images).get(form_id)              # suboptimal solution
         is_id = img.id == form_id
         is_name = img.name == form_name
-        is_date = img.date == form_date
+        is_date = str(img.date) == str(form_date)
+        print(is_date, img.date, form_date)
         if is_id and is_name and is_date:
             pass    # no change
         else:
             if not is_name:
-                image.name = form_name
+                img.name = form_name
             if not is_date:
-                image.date = form_date
+                img.date = datetime.date.today()
             print(db.session.commit())
         return redirect(url_for('image', image_id=form_id))
 
@@ -88,6 +97,7 @@ def image_change():
 @app.route('/image/<int:image_id>', methods=['GET', 'POST'])
 def image(image_id: int):
     return render_template('image.html', image_id=image_id, img=Images.query.get(image_id))
+
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -99,6 +109,7 @@ def get_image_list(per_page=app.config['ROWS_PER_PAGE'], page_id=1):
     page_id -= 1                            # to make indexes starts with 1 instead of 0
     images = Images.query.limit(per_page).offset(page_id*per_page).all()
     return images
+
 
 def get_image_pages_count(per_page=app.config['ROWS_PER_PAGE']):
     images = Images.query.count()
@@ -114,6 +125,4 @@ if __name__ == '__main__':
         for i in range(1, 100):
             db.session.add(Images(name=f"ImageName{i}", link=f"http://link.net/image{i}.img", date=datetime.datetime.now()))
         db.session.commit()
-        images = Images.query.all()
-        print(images)
     app.run(debug=True)
