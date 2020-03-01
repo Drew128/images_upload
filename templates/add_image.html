@@ -6,7 +6,9 @@
     <br>
     <form action="{{url_for('add_image')}}" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
-            <input id="filename" name="filename" type="text" class="form-control" placeholder="example.jpg">
+            <input id="filename" name="filename" type="text" class="form-control" placeholder="example.jpg"
+                   data-toggle="tooltip" data-placement="right"
+                   title="You shouldn't use spaces or slashes or even cyrillic symbols, ok?">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -18,55 +20,8 @@
         </div>
         </div>
     </form>
-    <script>
-        $(document).ready(function e(){
-          $('button[id="upload"]')[0].disabled = true
-          $('input[id="filename"]')[0].disabled = true
-          });
-
-          $('input[type="file"]').change(function e()
-         {
-          var filename = $('input[id="filename"]')[0]
-          var isFile = $('input[type="file"]').length
-          if (/^[0-9a-zA-Z\^\&\'\@\{\}\[\]\,\$\=\!\-\#\(\)\.\%\+\~\_]+$/.test(filename.value))
-          {
-          filename.classList.remove("is-valid")
-          filename.classList.add("is-invalid")
-          }
-          else
-          {
-          filename.classList.remove("is-invalid")
-          filename.classList.add("is-valid")
-          }
-          if (isFile == 1) {
-            $('button[id="upload"]')[0].disabled = false
-            $('input[id="filename"]')[0].disabled = false
-          }
-          else {
-            $('button[id="upload"]')[0].disabled = true
-          }}
-          );
-
-        $('input[id="filename"]').keyup(function e()
-         {
-          var filename = $('input[id="filename"]')[0]
-          if (/^[0-9a-zA-Z\^\&\'\@\{\}\[\]\,\$\=\!\-\#\(\)\.\%\+\~\_]+$/.test(filename.value))
-          {$('button[id="upload"]')[0].disabled = false
-          filename.classList.remove("is-invalid")
-          filename.classList.add("is-valid")
-          }
-          else
-          {$('button[id="upload"]')[0].disabled = true
-          filename.classList.remove("is-valid")
-          filename.classList.add("is-invalid")}
-          });
-
-        $('input[type="file"]').change(function(e){
-        var fileName = e.target.files[0].name;
-        document.getElementById("filename").value = fileName
-        document.getElementsByClassName("custom-file-label")[0].innerHTML = fileName;
-            });
-    </script>
+    <script type="text/javascript"
+         src="{{ url_for('add_image_script', filename='add_image_script.js') }}"></script>
 </div>
 
 

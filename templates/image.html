@@ -34,8 +34,17 @@
     {% endif %}
 </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <div class="row justify-content-between">
+  <div class="col-4">
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+  <div class="col-4" align="right">
+      <button type="button" class="btn btn-primary" onclick="window.location.href = '{{url_for('images_list', page_id=page_id)}}'">Return to list</button>
+  </div>
+</div>
 </form>
+
 
 {% endblock %}
 

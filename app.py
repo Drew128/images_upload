@@ -53,6 +53,10 @@ def images_list(page_id: int):
         return redirect(url_for('index', page_id=last_page))
     return render_template('images_list.html', get_image_list=get_image_list, last_page=last_page, page_id=page_id)
 
+@app.route('/script', methods=['GET', 'POST'])
+def add_image_script():
+    return render_template('add_image_script.js')
+
 
 @app.route('/add_image', methods=['GET', 'POST'])
 def add_image():
@@ -96,7 +100,8 @@ def image_change():
 
 @app.route('/image/<int:image_id>', methods=['GET', 'POST'])
 def image(image_id: int):
-    return render_template('image.html', image_id=image_id, img=Images.query.get(image_id))
+    page_id = get_page_number_by_img_number(image_id=image_id)
+    return render_template('image.html', image_id=image_id, img=Images.query.get(image_id), page_id=page_id)
 
 
 @app.route('/test', methods=['GET', 'POST'])
@@ -104,6 +109,9 @@ def test():
     obj = [[i, f"#image{i}", f"image{i}"] for i in range(10)]
     return render_template('test.html', obj=obj)
 
+def get_page_number_by_img_number(per_page=app.config['ROWS_PER_PAGE'], image_id=1):
+    page_id = (image_id-1)//per_page+1
+    return page_id
 
 def get_image_list(per_page=app.config['ROWS_PER_PAGE'], page_id=1):
     page_id -= 1                            # to make indexes starts with 1 instead of 0
@@ -122,7 +130,7 @@ if __name__ == '__main__':
         Images.query.count()
     except Exception:
         db.create_all()
-        for i in range(1, 100):
+        for i in range(1, 1000):
             db.session.add(Images(name=f"ImageName{i}", link=f"http://link.net/image{i}.img", date=datetime.datetime.now()))
         db.session.commit()
     app.run(debug=True)
